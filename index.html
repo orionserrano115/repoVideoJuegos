@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historia de los Videojuegos</title>
+  <style>
+    :root {
+      --bg: #f4f4f4;
+      --text: #222;
+      --card: #ffffff;
+      --accent: #6c5ce7;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #f4f4f4;
+      --card: #1f1f1f;
+      --accent: #00cec9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.4s ease, color 0.4s ease;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      background: var(--accent);
+      color: white;
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h2 {
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .form-section {
+      margin-top: 40px;
+      background: var(--card);
+      padding: 20px;
+      border-radius: 15px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Historia de los Videojuegos</h1>
+    <button id="themeToggle">Modo Oscuro</button>
+  </header>
+
+  <section class="timeline" id="timeline"></section>
+
+  <section class="form-section">
+    <h2>Agregar nuevo evento histórico</h2>
+    <input type="text" id="year" placeholder="Año o década">
+    <input type="text" id="title" placeholder="Título del evento">
+    <textarea id="description" placeholder="Descripción"></textarea>
+    <button id="addEvent">Agregar Evento</button>
+  </section>
+
+  <script>
+    const defaultEvents = [
+      {
+        year: "1972",
+        title: "Magnavox Odyssey",
+        description: "Primera consola doméstica de videojuegos."
+      },
+      {
+        year: "1977",
+        title: "Atari 2600",
+        description: "Popularizó los videojuegos en casa."
+      },
+      {
+        year: "1985",
+        title: "Nintendo Entertainment System",
+        description: "Revitalizó la industria tras la crisis del 83."
+      },
+      {
+        year: "1994",
+        title: "PlayStation",
+        description: "Introdujo el gaming 3D a gran escala."
+      },
+      {
+        year: "2001",
+        title: "Xbox",
+        description: "Microsoft entra al mercado de consolas."
+      },
+      {
+        year: "2013+",
+        title: "Era moderna",
+        description: "Streaming, eSports, VR y consolas de nueva generación."
+      }
+    ];
+
+    let events = JSON.parse(localStorage.getItem("gamingHistory")) || defaultEvents;
+
+    const timeline = document.getElementById("timeline");
+
+    function renderTimeline() {
+      timeline.innerHTML = "";
+      events.forEach(event => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.innerHTML = `
+          <h2>${event.year} - ${event.title}</h2>
+          <p>${event.description}</p>
+        `;
+        timeline.appendChild(card);
+      });
+    }
+
+    document.getElementById("addEvent").addEventListener("click", () => {
+      const year = document.getElementById("year").value;
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+
+      if (year && title && description) {
+        events.push({ year, title, description });
+        localStorage.setItem("gamingHistory", JSON.stringify(events));
+        renderTimeline();
+
+        document.getElementById("year").value = "";
+        document.getElementById("title").value = "";
+        document.getElementById("description").value = "";
+      }
+    });
+
+    document.getElementById("themeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+    });
+
+    renderTimeline();
+  </script>
+</body>
+</html>
